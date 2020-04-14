@@ -1,2 +1,2 @@
-# WaterMark-java
-a simple digital watermark project -java
+# DIWaterMark
+A digital image watermark system that can add or remove visible and invisible watermarks
