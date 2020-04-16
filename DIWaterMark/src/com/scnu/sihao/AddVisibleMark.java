@@ -3,47 +3,53 @@ package com.scnu.sihao;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 
+// åŸºæœ¬åŸç†
+// 0 å–åŸå›¾å’Œæ°´å°çš„åƒç´ æ”¾åˆ°3*width*heightçš„ä¸€ç»´æ•°ç»„ä¸­
+// 1 å°†ä¸€ç»´æ•°ç»„åƒç´ è½¬ä¸ºä¸‰ç»´æ•°ç»„ ï¼ˆRGBï¼‰
+// 2 åŸå›¾çš„ä¸‰ç»´åƒç´  ä¿®æ”¹ä¸ºæ°´å°çš„ä¸‰ç»´åƒç´  ä¸€ç»´ç»´çš„æ”¹ï¼ˆè¿™é‡Œåªå¤„ç†æ°´å°å›¾å¤§å°çš„åŒºåŸŸï¼‰
+// 3 ä¸‰ç»´æ•°ç»„å†è½¬å›ä¸€ç»´æ•°ç»„åƒç´  å†ç”Ÿæˆoutputå›¾
+
 public class AddVisibleMark {
      
 	 public void start(String sourceImage,String waterMarkImage,String resultImage,int x,int y) {
-		// »ñÈ¡Ô­Í¼ÏñÍ¼Æ¬ ´æÓÚBufferÖĞ
+		// è·å–åŸå›¾åƒå›¾ç‰‡ å­˜äºBufferä¸­
 	        BufferedImage oImage = ImageUtil.getImage(sourceImage);  
-	        // »ñÈ¡Ë®Ó¡Í¼ÏñÍ¼Æ¬ ´æÓÚBufferÖĞ
+	        // è·å–æ°´å°å›¾åƒå›¾ç‰‡ å­˜äºBufferä¸­
 	        BufferedImage wImage = ImageUtil.getImage(waterMarkImage);  
-	        // »ñÈ¡Ô­Í¼ÏñµÄÍ¼Æ¬ÀàĞÍ
+	        // è·å–åŸå›¾åƒçš„å›¾ç‰‡ç±»å‹
 	        int type = oImage.getType(); 
-	      //to provide pixel writing capabilitiesÌá¹©ÏñËØĞ´Èë¹¦ÄÜ    
-	        WritableRaster oRaster = oImage.getRaster();   // getRaster ·µ»ØµÄ¾ÍÊÇWritableRaster 
+	      //to provide pixel writing capabilitiesæä¾›åƒç´ å†™å…¥åŠŸèƒ½    
+	        WritableRaster oRaster = oImage.getRaster();   // getRaster è¿”å›çš„å°±æ˜¯WritableRaster 
 	        WritableRaster wRaster = wImage.getRaster(); 
 	        int oWidth = oRaster.getWidth(); 
 	        int oHeight = oRaster.getHeight();
 	        int wWidth = wRaster.getWidth(); 
 	        int wHeight = wRaster.getHeight(); 
-	      //¶¨Òå³¤Îª3*oWidth*oHeightÒ»Î¬Êı×é´æ´¢Í¼ÏñÏñËØ 
+	      //å®šä¹‰é•¿ä¸º3*oWidth*oHeightä¸€ç»´æ•°ç»„å­˜å‚¨å›¾åƒåƒç´  
 	        int[] oPixels = new int[3 * oWidth * oHeight]; 
 	        int[] wPixels = new int[3 * wWidth * wHeight];  
-	        // ·µ»Ø int£¨ÕâÀïÊÇintÀàing£©Êı×é£¨¼´µÚÎå¸ö²ÎÊı£©µÄÏñËØ ÔÚÕâ¸öÇø¼ä£¨Ç°Ãæ4¸ö²ÎÊı£©µÄÑù±¾£¨È¡Ñù£©  ·µ»Ø½á¹ûÎªintÀàĞÍµÄÊı×é
+	        // è¿”å› intï¼ˆè¿™é‡Œæ˜¯intç±»ingï¼‰æ•°ç»„ï¼ˆå³ç¬¬äº”ä¸ªå‚æ•°ï¼‰çš„åƒç´  åœ¨è¿™ä¸ªåŒºé—´ï¼ˆå‰é¢4ä¸ªå‚æ•°ï¼‰çš„æ ·æœ¬ï¼ˆå–æ ·ï¼‰  è¿”å›ç»“æœä¸ºintç±»å‹çš„æ•°ç»„
 	        oRaster.getPixels(0, 0, oWidth, oHeight, oPixels);	//Returns the samples in an array of int for the specified pixel.
 	        wRaster.getPixels(0, 0, wWidth, wHeight, wPixels); 
-	        // Ô­Í¼µÄÒ»Î¬RGBÊı×é×ª»»ÎªÈıÎ¬RGBÊı×é 
+	        // åŸå›¾çš„ä¸€ç»´RGBæ•°ç»„è½¬æ¢ä¸ºä¸‰ç»´RGBæ•°ç»„ 
 	        int[][][] oRGBPixels = ImageUtil.getRGBArrayToMatrix(oPixels, oWidth,  oHeight);  
-	        // Ë®Ó¡µÄÒ»Î¬RGBÊı×é×ª»»ÎªÈıÎ¬RGBÊı×é 
+	        // æ°´å°çš„ä¸€ç»´RGBæ•°ç»„è½¬æ¢ä¸ºä¸‰ç»´RGBæ•°ç»„ 
 	        int[][][] wRGBPixels = ImageUtil.getRGBArrayToMatrix(wPixels, wWidth,  wHeight);  
 	       
-	        // Ô­Í¼µÄÈıÎ¬ÏñËØ ĞŞ¸ÄÎªË®Ó¡µÄÈıÎ¬ÏñËØ
-	        // Ò»Î¬Î¬µÄ¸Ä
+	        // åŸå›¾çš„ä¸‰ç»´åƒç´  ä¿®æ”¹ä¸ºæ°´å°çš„ä¸‰ç»´åƒç´ 
+	        // ä¸€ç»´ç»´çš„æ”¹
 	        for(int k=0; k<=2; k++){
-	        	// ºá×ø±ê
+	        	// æ¨ªåæ ‡
 	        	for( int i=x,q=0; q<wWidth; i++,q++){
-	  	        // ×İ×ø±ê
+	  	        // çºµåæ ‡
 	        		for(int j=y,w=0; w<wHeight; j++,w++){
 	  	        	oRGBPixels[k][i][j]=wRGBPixels[k][q][w];
 	              }
 	  	     }
 	        }
-	        //ÈıÎ¬¾ØÕó±äÎªÒ»Î¬ÏòÁ¿                
+	        //ä¸‰ç»´çŸ©é˜µå˜ä¸ºä¸€ç»´å‘é‡                
 	        int[] result =ImageUtil.getRGBMatrixToArray(oRGBPixels);
-	        // ½«BufferedImage¶ÔÏóĞ´Èë´ÅÅÌ    ½«rgbResultÏñËØset¸øÍ¼Æ¬   ÕâÀïµÄtypeÎª5 ÎªRGB¸ñÊ½ÎÄ¼ş ÉèÖÃÎªbmp È»¶øÃû×ÖÈ´¿ÉÒÔÉèÖÃÎªÆäËûµÄ ÕâÑù»áÏÈ×ÔĞĞÉú³ÉbmpµÄÍ¼ ÔÙ×Ô¶¯Éú³ÉÆäËûÀàĞÍµÄÍ¼
+	        // å°†BufferedImageå¯¹è±¡å†™å…¥ç£ç›˜    å°†rgbResultåƒç´ setç»™å›¾ç‰‡   è¿™é‡Œçš„typeä¸º5 ä¸ºRGBæ ¼å¼æ–‡ä»¶ è®¾ç½®ä¸ºbmp ç„¶è€Œåå­—å´å¯ä»¥è®¾ç½®ä¸ºå…¶ä»–çš„ è¿™æ ·ä¼šå…ˆè‡ªè¡Œç”Ÿæˆbmpçš„å›¾ å†è‡ªåŠ¨ç”Ÿæˆå…¶ä»–ç±»å‹çš„å›¾
 	        ImageUtil.setImage(result, oWidth, oHeight,resultImage,  
 	                "bmp", type);  
 	        System.out.println("AddVisibleMark IS OK!");
