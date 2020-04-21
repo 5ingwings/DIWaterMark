@@ -6,55 +6,56 @@ import java.awt.image.WritableRaster;
   
 import com.scnu.sihao.ImageUtil;  
 import com.scnu.sihao.MathTool;  
-//FDCTË®Ó¡Ç¶Èë
+//FDCTæ°´å°åµŒå…¥
 public class AddWatermark {  
     private static final int d = 5;  
     public void start(String sourceImage,String waterMarkImage,String resultImage) {  
-    	// »ñÈ¡Ô­Í¼ÏñÍ¼Æ¬ ´æÓÚBufferÖĞ
+    	// è·å–åŸå›¾åƒå›¾ç‰‡ å­˜äºBufferä¸­
         BufferedImage oImage = ImageUtil.getImage(sourceImage);  
-        // »ñÈ¡Ë®Ó¡Í¼ÏñÍ¼Æ¬ ´æÓÚBufferÖĞ
+        // è·å–æ°´å°å›¾åƒå›¾ç‰‡ å­˜äºBufferä¸­
         BufferedImage wImage = ImageUtil.getImage(waterMarkImage);  
-        // »ñÈ¡Ô­Í¼ÏñµÄÍ¼Æ¬ÀàĞÍ
+        // è·å–åŸå›¾åƒçš„å›¾ç‰‡ç±»å‹
         int type = oImage.getType();  
-        //to provide pixel writing capabilitiesÌá¹©ÏñËØĞ´Èë¹¦ÄÜ    
-        WritableRaster oRaster = oImage.getRaster();   // getRaster ·µ»ØµÄ¾ÍÊÇWritableRaster
+        //to provide pixel writing capabilitiesæä¾›åƒç´ å†™å…¥åŠŸèƒ½    
+        WritableRaster oRaster = oImage.getRaster();   // getRaster è¿”å›çš„å°±æ˜¯WritableRaster
         WritableRaster wRaster = wImage.getRaster();  
         int oWidth = oRaster.getWidth();  
         int oHeight = oRaster.getHeight();  
         int wWidth = wRaster.getWidth();  
         int wHeight = wRaster.getHeight();  
-        // ÉèÖÃÔ­Í¼ÏñÏñËØÎª3±¶µÄwritable pixel area RGB 3²ã     ¶¨Òå³¤Îª3*oWidth*oHeightÒ»Î¬Êı×é´æ´¢Í¼ÏñÏñËØ 
+        // è®¾ç½®åŸå›¾åƒåƒç´ ä¸º3å€çš„writable pixel area RGB 3å±‚     å®šä¹‰é•¿ä¸º3*oWidth*oHeightä¸€ç»´æ•°ç»„å­˜å‚¨å›¾åƒåƒç´  
         int[] oPixels = new int[3 * oWidth * oHeight];  
         int[] wPixels = new int[wWidth * wHeight];  
-        // ·µ»Ø int£¨ÕâÀïÊÇintÀàing£©Êı×é£¨¼´µÚÎå¸ö²ÎÊı£©µÄÏñËØ ÔÚÕâ¸öÇø¼ä£¨Ç°Ãæ4¸ö²ÎÊı£©µÄÑù±¾£¨È¡Ñù£©  ·µ»Ø½á¹ûÎªintÀàĞÍµÄÊı×é
+        // è¿”å› intï¼ˆè¿™é‡Œæ˜¯intç±»ingï¼‰æ•°ç»„ï¼ˆå³ç¬¬äº”ä¸ªå‚æ•°ï¼‰çš„åƒç´  åœ¨è¿™ä¸ªåŒºé—´ï¼ˆå‰é¢4ä¸ªå‚æ•°ï¼‰çš„æ ·æœ¬ï¼ˆå–æ ·ï¼‰  è¿”å›ç»“æœä¸ºintç±»å‹çš„æ•°ç»„
         oRaster.getPixels(0, 0, oWidth, oHeight, oPixels);	//Returns the samples in an array of int for the specified pixel.
         wRaster.getPixels(0, 0, wWidth, wHeight, wPixels);  
-        // Ò»Î¬RGBÊı×é×ª»»ÎªÈıÎ¬RGBÊı×é 
+        // ä¸€ç»´RGBæ•°ç»„è½¬æ¢ä¸ºä¸‰ç»´RGBæ•°ç»„ 
         int[][][] RGBPixels = ImageUtil.getRGBArrayToMatrix(oPixels, oWidth,  
                 oHeight);  
-        // ½«RGBÈıÎ¬Êı×éµÄµÚÈıÎ¬ ´ÓintĞÍ×ª»»ÎªdoubleĞÍ
+        // å°†RGBä¸‰ç»´æ•°ç»„çš„ç¬¬ä¸‰ç»´ ä»intå‹è½¬æ¢ä¸ºdoubleå‹
         double[][] rPixels = MathTool.intToDoubleMatrix(RGBPixels[2]);  
-        // ½«Ë®Ó¡µÄÏñËØ´ÓÒ»Î¬×ª»»Îª¶şÎ¬
+        // å°†æ°´å°çš„åƒç´ ä»ä¸€ç»´è½¬æ¢ä¸ºäºŒç»´
         int[][] wDMatrix = ImageUtil.arrayToMatrix(wPixels, wWidth, wHeight);  
         double[][] result = rPixels;  
         
-        // Ç¶ÈëËã·¨  
-        // Ë®Ó¡µÄ¿í¶È
+        // åµŒå…¥ç®—æ³•  
+        // æ°´å°çš„å®½åº¦
         for (int i = 0; i < wWidth; i++) {  
-        // Ë®Ó¡µÄ¸ß¶È
+        // æ°´å°çš„é«˜åº¦
         	for (int j = 0; j < wHeight; j++) {  
-            	// Ã¿¸ö8X8¿éÍê³Éºó£¬ÓÖ´´½¨Ò»¸ö8X8µÄ¿é
+            	// æ¯ä¸ª8X8å—å®Œæˆåï¼Œåˆåˆ›å»ºä¸€ä¸ª8X8çš„å—
                 double[][] blk = new double[8][8];  
-                // ¶ÔÔ­Ê¼Í¼ÏñµÄµÚÈıÎ¬½øĞĞ8 * 8 ·Ö¿é  
+                // å¯¹åŸå§‹å›¾åƒçš„ç¬¬ä¸‰ç»´è¿›è¡Œ8 * 8 åˆ†å—  
                 for (int m = 0; m < 8; m++) {  
                     for (int n = 0; n < 8; n++) {  
-                    	// doubleĞÍµÄRGBÈıÎ¬Êı×éµÄµÚÈıÎ¬ ·Ö8X8¿é¸øblk[][]
+                    	// doubleå‹çš„RGBä¸‰ç»´æ•°ç»„çš„ç¬¬ä¸‰ç»´ åˆ†8X8å—ç»™blk[][]
                         blk[m][n] = rPixels[8 * i + m][8 * j + n];  
                     }  
                 }  
-                // ¶ÔÔ­Ê¼Í¼ÏñµÄµÚÈıÎ¬µÄ8X8¿é½øĞĞ¿ìËÙÀëÉ¢ÓàÏÒ±ä»»
+                // å¯¹åŸå§‹å›¾åƒçš„ç¬¬ä¸‰ç»´çš„8X8å—è¿›è¡Œå¿«é€Ÿç¦»æ•£ä½™å¼¦å˜æ¢
                 double[][] dBlk = FDct.fDctTransform(blk);  
-                // ÈôË®Ó¡Í¼Æ¬µÄ i j ÇøÓòÎª0 Ôò ½«Ô­Í¼µÄ½øĞĞ¿ìËÙÀëÉ¢ÓàÏÒ±ä»»ºóµÄ²¿·ÖÇøÓò½øĞĞ¶à´Î-5»ò+5²Ù×÷
+                // è‹¥æ°´å°å›¾ç‰‡çš„ i j åŒºåŸŸä¸º0 åˆ™ å°†åŸå›¾çš„è¿›è¡Œå¿«é€Ÿç¦»æ•£ä½™å¼¦å˜æ¢åçš„éƒ¨åˆ†åŒºåŸŸè¿›è¡Œå¤šæ¬¡-5æˆ–+5æ“ä½œ
+                // å› ä¸ºæ˜¯äºŒå€¼å›¾åƒ åªå­˜åœ¨0/255
                 if (wDMatrix[i][j] == 0) {  
                     dBlk[3][3] = dBlk[3][3] - d;  
                     dBlk[3][4] = dBlk[3][4] - d;  
@@ -68,24 +69,24 @@ public class AddWatermark {
                     dBlk[4][3] = dBlk[4][3] + d;  
                     dBlk[5][3] = dBlk[5][3] + d;  
                 }  
-                // ÔÙ¶ÔÔ­Ê¼Í¼ÏñµÄµÚÈıÎ¬µÄ8X8¿é½øĞĞ¿ìËÙÀëÉ¢ÓàÏÒ±ä»»µÃµ½µÄdBlk½øĞĞ FDctÄæ±ä»»
+                // å†å¯¹åŸå§‹å›¾åƒçš„ç¬¬ä¸‰ç»´çš„8X8å—è¿›è¡Œå¿«é€Ÿç¦»æ•£ä½™å¼¦å˜æ¢å¾—åˆ°çš„dBlkè¿›è¡Œ FDcté€†å˜æ¢
                 blk = IFDct.iFDctTransform(dBlk);  
                 for (int m = 0; m < 8; m++) {  
                     for (int n = 0; n < 8; n++) { 
-                    	// ·µ»Ø8X8´¦Àí½á¹ûµÄÇøÓò¸øÔ­Í¼
+                    	// è¿”å›8X8å¤„ç†ç»“æœçš„åŒºåŸŸç»™åŸå›¾
                         result[8 * i + m][8 * j + n] = blk[m][n];  
                     }  
                 }  
             }  
         }  
-        // Ô­Í¼ÏñµÄµÚÒ»¶şÎ¬²»±ä  Ö»ÊÇ¶ÔµÚÈıÎ¬½øĞĞ·Ö¿éµÄÀëÉ¢ÓàÏÒ±ä»»
+        // åŸå›¾åƒçš„ç¬¬ä¸€äºŒç»´ä¸å˜  åªæ˜¯å¯¹ç¬¬ä¸‰ç»´è¿›è¡Œåˆ†å—çš„ç¦»æ•£ä½™å¼¦å˜æ¢
         double[][][] temp = new double[3][oWidth][oHeight];  
         temp[0] = MathTool.intToDoubleMatrix(RGBPixels[0]);  
         temp[1] = MathTool.intToDoubleMatrix(RGBPixels[1]);  
         temp[2] = result;  
-        // ´¦ÀíºóµÄÍ¼Æ¬ÏñËØ½«ÈıÎ¬Êı×é×ªÎªÒ»Î¬Êı×é  
+        // å¤„ç†åçš„å›¾ç‰‡åƒç´ å°†ä¸‰ç»´æ•°ç»„è½¬ä¸ºä¸€ç»´æ•°ç»„  
         double[] rgbResult = ImageUtil.getRGBMatrixToArray(temp);  
-        // ½«BufferedImage¶ÔÏóĞ´Èë´ÅÅÌ    ½«rgbResultÏñËØset¸øÍ¼Æ¬   ÕâÀïµÄtypeÎª5 ÎªRGB¸ñÊ½ÎÄ¼ş
+        // å°†BufferedImageå¯¹è±¡å†™å…¥ç£ç›˜    å°†rgbResultåƒç´ setç»™å›¾ç‰‡   è¿™é‡Œçš„typeä¸º5 ä¸ºRGBæ ¼å¼æ–‡ä»¶
         ImageUtil.setImage(rgbResult, oWidth, oHeight,resultImage,  
                 "bmp", type);     
         System.out.println("AddWatermark IS OK!"); 
