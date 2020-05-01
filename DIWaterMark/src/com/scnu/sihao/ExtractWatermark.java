@@ -8,35 +8,35 @@ import javax.swing.JOptionPane;
 import com.scnu.sihao.ImageUtil;  
 import com.scnu.sihao.MathTool;  
  
-//FDCTË®Ó¡ÌáÈ¡ÊµÑé
+//FDCTæ°´å°æå–å®éªŒ
 public class ExtractWatermark {  
     public void start(String sourceImage,String resultImage,String returnWaterMarkImage,int wWidth, int wHeight) {  
-        // mImageÊÇÇ¶ÈëË®Ó¡ºóµÄÍ¼Ïñ  
+        // mImageæ˜¯åµŒå…¥æ°´å°åçš„å›¾åƒ  
         BufferedImage mImage = ImageUtil.getImage(resultImage);  
-        // Ô­Ê¼Í¼Ïñ  
+        // åŸå§‹å›¾åƒ  
         BufferedImage oImage = ImageUtil.getImage(sourceImage);  
-        // getRaster ·µ»ØµÄ¾ÍÊÇWritableRaster
+        // getRaster è¿”å›çš„å°±æ˜¯WritableRaster
         WritableRaster oRaster = oImage.getRaster();  
         WritableRaster mRaster = mImage.getRaster();  
         int oWidth = oRaster.getWidth();  
         int oHeight = oRaster.getHeight();  
-        // ÉèÖÃÔ­Í¼ÏñÏñËØÎª3±¶µÄwritable pixel area RGB 3²ã
+        // è®¾ç½®åŸå›¾åƒåƒç´ ä¸º3å€çš„writable pixel area RGB 3å±‚
         int[] oPixels = new int[3 * oWidth * oHeight];  
         int[] mPixels = new int[3 * oWidth * oHeight];  
-     // ·µ»Ø int£¨ÕâÀïÊÇintÀàĞÍ£©Êı×é£¨¼´µÚÎå¸ö²ÎÊı£©µÄÏñËØ ÔÚÕâ¸öÇø¼ä£¨Ç°Ãæ4¸ö²ÎÊı£©µÄÑù±¾£¨È¡Ñù£©  ·µ»Ø½á¹ûÎªintÀàĞÍµÄÊı×é
+     // è¿”å› intï¼ˆè¿™é‡Œæ˜¯intç±»å‹ï¼‰æ•°ç»„ï¼ˆå³ç¬¬äº”ä¸ªå‚æ•°ï¼‰çš„åƒç´  åœ¨è¿™ä¸ªåŒºé—´ï¼ˆå‰é¢4ä¸ªå‚æ•°ï¼‰çš„æ ·æœ¬ï¼ˆå–æ ·ï¼‰  è¿”å›ç»“æœä¸ºintç±»å‹çš„æ•°ç»„
         oRaster.getPixels(0, 0, oWidth, oHeight, oPixels);  
         mRaster.getPixels(0, 0, oWidth, oHeight, mPixels);  
-        // µÃrgbÍ¼ÏñÈı²ã¾ØÕó£¬mRgbPixels[0]±íÊ¾b²ã·ÖÁ¿£¿   mRgbPixels[2]°É
+        // å¾—rgbå›¾åƒä¸‰å±‚çŸ©é˜µ
         int[][][] mRgbPixels = ImageUtil.getRGBArrayToMatrix(mPixels, oWidth,  
                 oHeight);  
         int[][][] oRgbPixels = ImageUtil.getRGBArrayToMatrix(oPixels, oWidth,  
                 oHeight);  
-        // ½«RGBÈıÎ¬Êı×éµÄµÚÈıÎ¬ ´ÓintĞÍ×ª»»ÎªdoubleĞÍ
+        // å°†RGBä¸‰ç»´æ•°ç»„çš„ç¬¬ä¸‰ç»´ ä»intå‹è½¬æ¢ä¸ºdoubleå‹
         double[][] oDPixels = MathTool.intToDoubleMatrix(mRgbPixels[2]);  
         double[][] mDPixels = MathTool.intToDoubleMatrix(oRgbPixels[2]);  
-        // ´´½¨Ò»¸ö´óĞ¡ºÍË®Ó¡Í¼Æ¬´óĞ¡Ò»ÖÂµÄ¶şÎ¬Êı×é
+        // åˆ›å»ºä¸€ä¸ªå¤§å°å’Œæ°´å°å›¾ç‰‡å¤§å°ä¸€è‡´çš„äºŒç»´æ•°ç»„
         double[][] result = new double[wWidth][wHeight]; 
-        // Ë®Ó¡Í¼Æ¬µÄ¿í¸ß
+        // æ°´å°å›¾ç‰‡çš„å®½é«˜
         for (int i = 0; i < wWidth; i++) {  
             for (int j = 0; j < wHeight; j++) {  
                 double[][] oBlk = new double[8][8];  
@@ -45,18 +45,18 @@ public class ExtractWatermark {
                 int f = 0;  
                 for (int m = 0; m < 8; m++) {  
                     for (int n = 0; n < 8; n++) {  
-                    	// Ô­Í¼ÏñdoubleĞÍµÄRGBÈıÎ¬Êı×éµÄµÚÈıÎ¬ ·Ö8X8¿é¸øoBlk[][]
+                    	// åŸå›¾åƒdoubleå‹çš„RGBä¸‰ç»´æ•°ç»„çš„ç¬¬ä¸‰ç»´ åˆ†8X8å—ç»™oBlk[][]
                         oBlk[m][n] = oDPixels[8 * i + m][8 * j + n];  
-                        // Ìí¼ÓÁËË®Ó¡µÄÍ¼ÏñdoubleĞÍµÄRGBÈıÎ¬Êı×éµÄµÚÈıÎ¬ ·Ö8X8¿é¸ømBlk[][]
+                        // æ·»åŠ äº†æ°´å°çš„å›¾åƒdoubleå‹çš„RGBä¸‰ç»´æ•°ç»„çš„ç¬¬ä¸‰ç»´ åˆ†8X8å—ç»™mBlk[][]
                         mBlk[m][n] = mDPixels[8 * i + m][8 * j + n];  
                     }  
                 }  
-                // ¶ÔoBlk½øĞĞ¿ìËÙÀëÉ¢ÓàÏÒ±ä»»
+                // å¯¹oBlkè¿›è¡Œå¿«é€Ÿç¦»æ•£ä½™å¼¦å˜æ¢
                 double[][] dOBlk = FDct.fDctTransform(oBlk);  
-                // ¶ÔmBlk½øĞĞ¿ìËÙÀëÉ¢ÓàÏÒ±ä»»
+                // å¯¹mBlkè¿›è¡Œå¿«é€Ÿç¦»æ•£ä½™å¼¦å˜æ¢
                 double[][] dMBlk = FDct.fDctTransform(mBlk);  
-                // ÈôÔ­Í¼Ïñ¾­¹ı¿ìËÙÀëÉ¢ÓàÏÒ±ä»»µÄ3£¬3ÇøÓò´óÓÚ Ìí¼ÓÁËË®Ó¡¾­¹ı¿ìËÙÀëÉ¢ÓàÏÒ±ä»»µÄ3£¬3ÇøÓò Ôòd++
-                // È¡Ë®Ó¡µÄµÚÈıÎ¬ÏñËØ£¬ÒòÎªÊÇÇ¶Èëµ½µÚÈıÎ¬ÖĞ£¬¶ÔÕâ¸öÏñËØ¾ØÕó½øĞĞ8X8·Ö¿é£¬¶ÔÔ­Í¼ÏñÒ²ÊÇµÚÈıÎ¬8X8·Ö¿é£¬ÔÙÍ¨¹ı¼¸¸öÌØÕ÷µãÅĞ¶Ï Èô´æÔÚdÖ®ºÍ´óÓÚµÈÓÚfÖ®ºÍ£¬ÔòÍ¼ÏñijÇøÓòÖÃÎª1 ·ñÔòÖÃÎª0
+                // è‹¥åŸå›¾åƒç»è¿‡å¿«é€Ÿç¦»æ•£ä½™å¼¦å˜æ¢çš„3ï¼Œ3åŒºåŸŸå¤§äº æ·»åŠ äº†æ°´å°ç»è¿‡å¿«é€Ÿç¦»æ•£ä½™å¼¦å˜æ¢çš„3ï¼Œ3åŒºåŸŸ åˆ™d++
+                // å–æ°´å°çš„ç¬¬ä¸‰ç»´åƒç´ ï¼Œå› ä¸ºæ˜¯åµŒå…¥åˆ°ç¬¬ä¸‰ç»´ä¸­ï¼Œå¯¹è¿™ä¸ªåƒç´ çŸ©é˜µè¿›è¡Œ8X8åˆ†å—ï¼Œå¯¹åŸå›¾åƒä¹Ÿæ˜¯ç¬¬ä¸‰ç»´8X8åˆ†å—ï¼Œå†é€šè¿‡å‡ ä¸ªç‰¹å¾ç‚¹åˆ¤æ–­ è‹¥å­˜åœ¨dä¹‹å’Œå¤§äºç­‰äºfä¹‹å’Œï¼Œåˆ™å›¾åƒijåŒºåŸŸç½®ä¸º1 å¦åˆ™ç½®ä¸º0
                 if (dOBlk[3][3] > dMBlk[3][3]) {  
                     d++;  
                 } else {  
@@ -82,7 +82,7 @@ public class ExtractWatermark {
                 } else {  
                     f++;  
                 }  
-                 // ÈôdĞ¡ÓÚf ÔòÉú³ÉË®Ó¡µÄ¶şÎ¬Êı×éÎª0   
+                 // è‹¥då°äºf åˆ™ç”Ÿæˆæ°´å°çš„äºŒç»´æ•°ç»„ä¸º0   
                 if (d < f) {  
                     result[i][j] = 0;  
                 } else {  
@@ -91,14 +91,14 @@ public class ExtractWatermark {
             }  
         }  
         double[] outResult = ImageUtil.matrixToArray(result);  
-        // °ÑÇ¶ÈëË®Ó¡µÄ½á¹ûĞ´µ½BufferedImage¶ÔÏó    µÃµ½µÄÊÇbmp/jpg/µÈµÈ ¿É×Ô¶¨Òå ¸ñÊ½µÄÍ¼Æ¬ È»ºóÓÃ»§ÔÚºÏ³ÉÍ¼Æ¬Ê±¸Äºó×º ¿ÉÒÔ¸ÄÍ¼Æ¬¸ñÊ½
+        // æŠŠåµŒå…¥æ°´å°çš„ç»“æœå†™åˆ°BufferedImageå¯¹è±¡    å¾—åˆ°çš„æ˜¯bmp/jpg/ç­‰ç­‰ å¯è‡ªå®šä¹‰ æ ¼å¼çš„å›¾ç‰‡ ç„¶åç”¨æˆ·åœ¨åˆæˆå›¾ç‰‡æ—¶æ”¹åç¼€ å¯ä»¥æ”¹å›¾ç‰‡æ ¼å¼
         ImageUtil.setImage(outResult, wWidth, wHeight, returnWaterMarkImage, "jpg",  
                 BufferedImage.TYPE_BYTE_BINARY); 
         
-        System.out.println("Ô­Í¼Ïñ¿í¶ÈÎª:"+oWidth);
-        System.out.println("Ô­Í¼Ïñ¸ß¶ÈÎª:"+oHeight);
-        System.out.println("Ë®Ó¡Í¼Ïñ¿í¶ÈÎª:"+wWidth);
-        System.out.println("Ë®Ó¡Í¼Ïñ¸ß¶ÈÎª:"+wHeight);
+        System.out.println("åŸå›¾åƒå®½åº¦ä¸º:"+oWidth);
+        System.out.println("åŸå›¾åƒé«˜åº¦ä¸º:"+oHeight);
+        System.out.println("æ°´å°å›¾åƒå®½åº¦ä¸º:"+wWidth);
+        System.out.println("æ°´å°å›¾åƒé«˜åº¦ä¸º:"+wHeight);
         System.out.println("ExtractWatermark IS OK!");
      
     }  
