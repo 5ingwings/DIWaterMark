@@ -54,7 +54,7 @@ public class AddWatermark {
                 }  
                 // 对原始图像的第三维的8X8块进行快速离散余弦变换
                 double[][] dBlk = FDct.fDctTransform(blk);  
-                // 若水印图片的 i j 区域为0 则 将原图的进行快速离散余弦变换后的部分区域进行多次-5或+5操作
+                //  根据水印的值是0/255 在dblk[8][8]中频位置嵌入水印信息（如果wPixels是0则对减一个系数d，否则加上系数d）
                 // 因为是二值图像 只存在0/255
                 if (wDMatrix[i][j] == 0) {  
                     dBlk[3][3] = dBlk[3][3] - d;  
